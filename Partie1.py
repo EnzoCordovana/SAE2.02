@@ -8,10 +8,6 @@ X   vecteur, doit être un tableau
 """
 def norme(X):
     sum = 0
-    for x in np.array(X):
+    for x in np.array(X): # On ajoute le carré à la varibale
         sum += x**2
-    return np.sqrt(sum)
-
-vec = [1,2,3,4]
-
-print(norme(vec))
+    return np.sqrt(sum) # On retourne la racine à la variable
