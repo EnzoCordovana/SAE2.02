@@ -25,7 +25,12 @@ jobs:
 
       - name: Convert Python files to Jupyter notebooks
         run: |
-          for file in $(find . -name "*.py"); do
+          PY_FILES=$(find . -name "*.py")
+          if [ -z "$PY_FILES" ]; then
+            echo "Aucun fichier .py trouvé. On quitte."
+            exit 0
+          fi
+          for file in $PY_FILES; do
             jupytext "$file" --to notebook
           done
 
