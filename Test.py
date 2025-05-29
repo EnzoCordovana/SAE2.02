@@ -1,3 +1,0 @@
-# Petit test
-
-print('test')
