@@ -1,12 +1,39 @@
 import numpy as np
 import math
-"""
-Fonction norme qui prend en entrée un vecteur X et qui calcule sa norme.
 
-Arguments:
-X   vecteur, doit être un tableau
-"""
+np.set_printoptions(precision=1, linewidth=np.inf) # type: ignore
+
+def matrice_transposee(A):
+    A = np.array(A)
+    if A.ndim == 1:
+        # Calcule la dimention de la matrice
+        d = int(np.sqrt(len(A)))
+        # Redimensionner la matrice en une matrice carrée
+        # [a,b,c,d] => [[a,b],[c,d]]
+        A = A.reshape((d, d))
+    # Retourne directement la transposé 
+    return A.T
+
+def matrice_stochastique(A):
+    # Transforme la matrice en matrice numpy en float
+    A = np.array(A, dtype=float)
+    # Somme par colonne
+    som_col = A.sum(axis=0)
+    # Remplace 0 par 1 pour éviter division par zéro
+    som_col[som_col == 0] = 1
+    # Normalise chaque colonne
+    # La somme de la colonne fait 1
+    Q = A / som_col
+    return Q
+
 def norme(X):
+    """
+    Fonction norme qui prend en entrée 
+    un vecteur X et qui calcule sa norme.
+
+    Arguments:
+    X   vecteur, doit être un tableau
+    """
     sum = 0
     # On ajoute le carré à la varibale
     for x in np.array(X):
@@ -15,20 +42,19 @@ def norme(X):
     return np.sqrt(sum)
 
 
-"""
-Fonction puissance_iteree qui prend 
-
-A       matrice, doit être un tableau
-p       précision, doit être un entier   
-"""
 def puissance_iteree(A, p):
-    A = np.array(A)
+    """
+    Fonction puissance_iteree qui prend en entrée 
+    une matrice A, une précision p et qui retourne 
+    la valeur propre ainsi que le vecteur propre.
     
-    # Taille de la matrice carré
-    t = len(A)
+    A       matrice, doit être un tableau
+    p       précision, doit être un entier   
+    """
+    A = np.array(A)
 
     # Dimention de la matrice carré
-    d = int(math.sqrt(t))
+    d = int(math.sqrt(len(A)))
 
     # Vecteur X_O \in R^N
     vec_0 = np.array([])
@@ -56,23 +82,60 @@ def puissance_iteree(A, p):
         # Condition de sortie
         if abs(lambda1  -lambda0) < p:
             return lambda1, vec_0
+
+# 1. L'algorithme de puissance itérée permet de calculer le score de chacune des pages car,
+# on attribue aléatoirement un score à chaque page puit on va itérée jusqu'a ce que la valeur propre change pratiquement pas.
+
+# 2.
+# Graphe de la partie 1 pointant i vers j
+# Web_{i,j}
+web = [
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+]
+
+def puissance_iteree_v2(A, p):
+    """
+    Fonction puissance_iteree qui prend en entrée 
+    une matrice A, une précision p et qui retourne 
+    le vecteur propre.
     
+    A       matrice, doit être un tableau
+    p       précision, doit être un entier   
+    """
 
-A = [2,0,0,3]
+    A = np.array(A)
 
-B = [
-    4, 1, 2,
-    0, 2, 5,
-    3, 1, 3
-]
+    # Transpose et stochastique la matrice
+    A = matrice_stochastique(matrice_transposee(A))
 
-C = [
-    4, -1, 2, 9,
-    0, 2, -5, 23,
-    -3, 1, 3, -21,
-    21, 3, 1, 0
-]
+    d = A.shape[0]
+    r = np.ones(d) / d
 
-print(puissance_iteree(A, 1e-6))
-print(puissance_iteree(B, 1e-6))
-print(puissance_iteree(C, 1e-6))
+    while True:
+        ancien_r = r
+        r = np.dot(A, r)
+        # On compare deux matrice selon la précision p
+        if np.allclose(r, ancien_r, atol=p):
+            return ancien_r
+
+r = puissance_iteree_v2(web, 1e-6)
+
+# On crée une liste de tuples (index_page, score)
+page_rank = list(enumerate(r, start=1))
+
+print("PageRank :")
+for page, rank in page_rank:
+    print(f"Page {page}\t: {rank:.4f}")
