@@ -6,12 +6,12 @@ np.set_printoptions(precision=1, linewidth=np.inf) # type: ignore
 def matrice_transposee(A):
     A = np.array(A)
     if A.ndim == 1:
-        # Calcule la dimention de la matrice
+        # Calcule la dimension de la matrice
         d = int(np.sqrt(len(A)))
         # Redimensionner la matrice en une matrice carrée
         # [a,b,c,d] => [[a,b],[c,d]]
         A = A.reshape((d, d))
-    # Retourne directement la transposé 
+    # Retourne directement la transposée
     return A.T
 
 def matrice_stochastique(A):
@@ -35,7 +35,7 @@ def norme(X):
     X   vecteur, doit être un tableau
     """
     sum = 0
-    # On ajoute le carré à la varibale
+    # On ajoute le carré à la variable
     for x in np.array(X):
         sum += x**2
     # On retourne la racine à la variable
@@ -53,7 +53,7 @@ def puissance_iteree(A, p):
     """
     A = np.array(A)
 
-    # Dimention de la matrice carré
+    # Dimension de la matrice carré
     d = int(math.sqrt(len(A)))
 
     # Vecteur X_O \in R^N
@@ -83,8 +83,8 @@ def puissance_iteree(A, p):
         if abs(lambda1  -lambda0) < p:
             return lambda1, vec_0
 
-# 1. L'algorithme de puissance itérée permet de calculer le score de chacune des pages car,
-# on attribue aléatoirement un score à chaque page puit on va itérée jusqu'a ce que la valeur propre change pratiquement pas.
+# 1. L'algorithme de puissance itérée permet de calculer le score de chacune des pages car
+# on attribue aléatoirement un score à chaque page puis on va itérér jusqu'à ce que la valeur propre change pratiquement pas.
 
 # 2.
 # Graphe de la partie 1 pointant i vers j
@@ -127,7 +127,7 @@ def puissance_iteree_v2(A, p):
     while True:
         ancien_r = r
         r = np.dot(A, r)
-        # On compare deux matrice selon la précision p
+        # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
             return ancien_r
 
