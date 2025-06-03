@@ -107,6 +107,8 @@ web = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
+
+
 def puissance_iteree_v2(A, p, alpha):
     """
     Fonction puissance_iteree qui prend en entrée 
@@ -135,26 +137,91 @@ def puissance_iteree_v2(A, p, alpha):
 
     d = A.shape[0]
     r = np.ones(d) / d # Normalisation
-    iteration = 0
+    
+    
+    iterations = 0
 
     while True:
         ancien_r = r
         r = np.dot(A, r)
-        iteration += 1
+        iterations += 1
         # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
             return ancien_r
 
-for p in [1e-2 ,1e-4, 1e-6, 1e-8]:
-    print(f"PageRank avec précision {p}:")
-    r = puissance_iteree_v2(web, p, 0.85)
-    print(r)
+def puissance_iteree_v3(A, p, alpha, max_iter=1000, tol=1e-6, verbose=True):
+    """
+    Fonction puissance_iteree qui prend en entrée 
+    une matrice A, une précision p et qui retourne 
+    le vecteur propre.
+    
+    A       matrice, doit être un tableau
+    p       précision, doit être un entier   
+    """
+
+    A = np.array(A)
+
+    # Transpose et stochastique la matrice
+    A = matrice_stochastique(matrice_transposee(A))
+    
+    print(A)
+
+    for i in range(len(A)):
+        colSom = np.sum(A[:, i])
+        if colSom == 0:
+            A[:, i] = [1/len(A)]
+        else:
+            A[:, i] = alpha * A[:, i] + (1-alpha)/len(A)
+
+    print(A)
+
+    d = A.shape[0]
+    r = np.ones(d) / d # Normalisation
+
+    iterations = 0
+    
+    
+    # On itère jusqu'à ce que la convergence soit atteinte
+    while iterations < max_iter:
+        ancien_r = r
+        r = np.dot(A, r)
+        iterations += 1
+        # On compare deux matrices selon la précision p
+        if np.allclose(r, ancien_r, atol=p):
+            return ancien_r
+    # Si la convergence n'est pas atteinte, on retourne le dernier vecteur
+    return r
+
+# On crée un dictionnaire pour stocker les résultats
+resultats = {}
+for p in [1e-2, 1e-4, 1e-6, 1e-8]:
+        r, erreurs, iterations = puissance_iteree_v2(web, p, 0.85), [], 0
+        erreur_finale = erreurs[-1] if erreurs else 0
+        
+        print(f"{p:<12.0e} {iterations:<12} {erreur_finale:<15.2e}")
+        
+        resultats[p] = {
+            'pagerank': r,
+            'erreurs': erreurs,
+            'iterations': iterations
+        }
+
+"""
+    while True:
+        ancien_r = r
+        r = np.dot(A, r)
+        # On compare deux matrices selon la précision p
+        if np.allclose(r, ancien_r, atol=p):
+            return ancien_r
+    """
 
 #r = puissance_iteree_v2(web, 1e-4, 0.85)
 
 # On crée une liste de tuples (index_page, score)
+r = puissance_iteree_v3(web, 1e-4, 0.85)
 page_rank = list(enumerate(r, start=1))
 
 print("PageRank :")
 for page, rank in page_rank:
     print(f"Page {page}\t: {rank:.4f}")
+
