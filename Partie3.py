@@ -91,11 +91,20 @@ def puissance_iteree(A, p):
 # Web_{i,j}
 
 web = [
-    0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0,
-    1, 0, 0, 1, 0,
-    1, 1, 0, 0, 0,
-    1, 1, 0, 0, 0
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
 def puissance_iteree_v2(A, p, alpha):
@@ -126,15 +135,22 @@ def puissance_iteree_v2(A, p, alpha):
 
     d = A.shape[0]
     r = np.ones(d) / d # Normalisation
+    iteration = 0
 
     while True:
         ancien_r = r
         r = np.dot(A, r)
+        iteration += 1
         # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
             return ancien_r
 
-r = puissance_iteree_v2(web, 1e-6, 0.85)
+for p in [1e-2 ,1e-4, 1e-6, 1e-8]:
+    print(f"PageRank avec précision {p}:")
+    r = puissance_iteree_v2(web, p, 0.85)
+    print(r)
+
+#r = puissance_iteree_v2(web, 1e-4, 0.85)
 
 # On crée une liste de tuples (index_page, score)
 page_rank = list(enumerate(r, start=1))
