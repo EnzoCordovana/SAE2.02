@@ -1,9 +1,14 @@
 import numpy as np
 import math
 
-np.set_printoptions(precision=1, linewidth=np.inf) # type: ignore
-
 def matrice_transposee(A):
+    """
+    Fonction matrice_transposee qui prend en entrée 
+    une matrice A et qui renvoie sa transposé.
+
+    Arguments:
+    A   matrice, doit être un tableau
+    """
     A = np.array(A)
     if A.ndim == 1:
         # Calcule la dimension de la matrice
@@ -15,6 +20,13 @@ def matrice_transposee(A):
     return A.T
 
 def matrice_stochastique(A):
+    """
+    Fonction nomatrice_stochastiquerme qui prend en entrée 
+    une matrice A et qui renvoie sa stochastique.
+
+    Arguments:
+    A   matrice, doit être un tableau
+    """
     # Transforme la matrice en matrice numpy en float
     A = np.array(A, dtype=float)
     # Somme par colonne
@@ -110,7 +122,7 @@ def puissance_iteree_v2(A, p):
     """
     Fonction puissance_iteree qui prend en entrée 
     une matrice A, une précision p et qui retourne 
-    le vecteur propre.
+    un tableau de vecteur propre.
     
     A       matrice, doit être un tableau
     p       précision, doit être un entier   
@@ -119,20 +131,20 @@ def puissance_iteree_v2(A, p):
     A = np.array(A)
 
     # Transpose et stochastique la matrice
-    A = matrice_stochastique(matrice_transposee(A))
+    Q = matrice_stochastique(matrice_transposee(A))
 
-    d = A.shape[0]
+    d = Q.shape[0]
     r = np.ones(d) / d
 
     while True:
         ancien_r = r
-        r = np.dot(A, r)
-        # On compare deux matrices selon la précision p
+        r = np.dot(Q, r)
+        # On compare deux matrice selon la précision p
         if np.allclose(r, ancien_r, atol=p):
             return ancien_r
 
 r = puissance_iteree_v2(web, 1e-6)
-
+print(r)
 # On crée une liste de tuples (index_page, score)
 page_rank = list(enumerate(r, start=1))
 
