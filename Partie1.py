@@ -144,7 +144,7 @@ def puissance_iteree_v2(A, p):
             return ancien_r
 
 r = puissance_iteree_v2(web, 1e-6)
-print(r)
+
 # On crée une liste de tuples (index_page, score)
 page_rank = list(enumerate(r, start=1))
 
