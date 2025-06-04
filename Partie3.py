@@ -24,6 +24,23 @@ def matrice_stochastique(A):
     Q = A / som_col
     return Q
 
+web = [
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+]
+
 webWithHub = [
     0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Hub]
     1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -75,17 +92,6 @@ webWithHubAndAuthority = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
-alpha = 0.85
-
-def matrice_transition_P(A, alpha):
-    for i in range(len(A)):
-        colSom = np.sum(A[:, i]) # Stockage de la somme d'une colonne
-        if colSom == 0:
-            A[:, i] = [1/len(A)] # Si somme = 0, alors la colonne entière devienne 1/N
-        else:
-            A[:, i] = alpha * A[:, i] + (1-alpha)/len(A) # Sinon, chaque cellule devienne alpha * cellule + (1-alpha)/N
-    return A
-
 def puissance_iteree_v2(A, p, alpha):
     """
     Fonction puissance_iteree qui prend en entrée 
@@ -99,34 +105,42 @@ def puissance_iteree_v2(A, p, alpha):
     A = np.array(A)
 
     # Transpose et stochastique la matrice
-    Q = matrice_stochastique(matrice_transposee(A))
+    A = matrice_stochastique(matrice_transposee(A))
+    
+    print(A)
 
-    # Traitement par colonne
-    matrice_transition_P(Q, alpha)
+    for i in range(len(A)):
+        colSom = np.sum(A[:, i])
+        if colSom == 0:
+            A[:, i] = [1/len(A)]
+        else:
+            A[:, i] = alpha * A[:, i] + (1-alpha)/len(A)
 
-    d = Q.shape[0]
-    rH = np.ones(d) / d # Normalisation
+    print(A)
+
+    d = A.shape[0]
+    r = np.ones(d) / d # Normalisation
     iterations = 0
 
     while True:
-        ancien_r = rH
-        rH = np.dot(A, rH)
+        ancien_r = r
+        r = np.dot(A, r)
         iterations += 1
         # On compare deux matrices selon la précision p
-        if np.allclose(rH, ancien_r, atol=p):
+        if np.allclose(r, ancien_r, atol=p):
             print(f"Convergence atteinte en {iterations} itérations avec p = {p}")
             return ancien_r
 
-
-
+r = puissance_iteree_v2(web, 1e-6, 0.85)
 
 #Partie 3.2 - 
 rH = puissance_iteree_v2(webWithHub, 1e-6, 0.85)
 rA = puissance_iteree_v2(webWithAuthority, 1e-6, 0.85)
 rHA = puissance_iteree_v2(webWithHubAndAuthority, 1e-6, 0.85)
 
+
 # On crée une liste de tuples (index_page, score)
-page_rank = list(enumerate(rH, start=1))
+page_rank = list(enumerate(r, start=1))
 
 print("PageRank :")
 precisions = [1e-2, 1e-4, 1e-6, 1e-8, 1e-10]
@@ -136,4 +150,4 @@ for page, rank in page_rank:
 
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
-    rH = puissance_iteree_v2(webWithHub, p, 0.85)
+    r = puissance_iteree_v2(web, p, 0.85)
