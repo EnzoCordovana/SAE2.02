@@ -76,21 +76,22 @@ webWithAuthority = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 14 [Authority] -> {}
 ]
 
+
 webWithHubAndAuthority = [
-    0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Authority] -> {2, 6}
-    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Authority] -> {2, 6}
+    1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,   #Page 6 [Hub] -> {1, 7, 8, 9, 10}
+    1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1,   #Page 6 [Hub] -> {1, 7, 8, 9, 10}
     1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 8 [Authority] -> {}
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 8 [Authority] -> {}
     0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0,   #Page 14 [Hub] -> {10, 11, 13}
+    0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1,
+    1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0,   #Page 14 [Hub] -> {10, 11, 13}
 ]
 
 webWithHubAndAuthorityV2 = [
@@ -178,14 +179,16 @@ def puissance_iteree_v2(A, p, alpha):
             print(f"Convergence atteinte en {iterations} itérations avec p = {p}")
             return ancien_r
 
-r = puissance_iteree_v2(web, 1e-6, alpha)
 
-#Partie 3.2 - Web avec Hub, Authority et Hub+Authority
+
+
 # On applique la fonction puissance_iteree_v2 sur les différents graphes
+r = puissance_iteree_v2(web, 1e-6, alpha)
 rH = puissance_iteree_v2(webWithHub, 1e-6, 0.85)
 rA = puissance_iteree_v2(webWithAuthority, 1e-6, 0.85)
 rHA = puissance_iteree_v2(webWithHubAndAuthority, 1e-6, 0.85)
 rHA2 = puissance_iteree_v2(webWithHubAndAuthorityV2, 1e-6, 0.85)
+rB = puissance_iteree_v2(webPageXScoreBoost, 1e-6, 0.85)
 
 # On crée une liste de tuples (index_page, score)
 page_rank = list(enumerate(r, start=1))
@@ -193,8 +196,6 @@ page_rank2 = list(enumerate(rH, start=1))
 page_rank3 = list(enumerate(rA, start=1))
 page_rank4 = list(enumerate(rHA, start=1))
 page_rank4_v2 = list(enumerate(rHA2, start=1))
-
-rB = puissance_iteree_v2(webPageXScoreBoost, 1e-6, 0.85)
 page_rank5 = list(enumerate(rB, start=1))
 
 
@@ -255,6 +256,8 @@ print("\nPageRank avec 2 pages boosté :")
 for page, rank in page_rank5:
     print(f"Page {page}\t: {rank:.4f}")
 
+
+# On effectue les tests avec différentes précisions
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
     r = puissance_iteree_v2(web, p, 0.85)
@@ -281,10 +284,14 @@ listePages = creerListePages(qtePages)
 matriceSansHubEtAut = rank1
 matriceAvecHubEtAut = rank2
 
-plt.bar(listePages, matriceSansHubEtAut, align='center', label="Ranks sans Hubs et Autorités")
+plt.bar(listePages, matriceSansHubEtAut, align='edge',width= 0.5, label="Ranks sans Hubs et Autorités")
 plt.bar(listePages, matriceAvecHubEtAut, color='red', width=0.5, label="Ranks avec Hubs et Autorités")
 
 plt.title("Impact des scores avec Hubs et Autorités")
 plt.ylabel("Rank [0-1]")
 plt.legend()
 plt.show()
+
+"""
+(1)
+"""
