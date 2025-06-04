@@ -42,7 +42,7 @@ web = [
 ]
 
 webWithHub = [
-    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Hub]
+    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Hub] -> {2, 3, 4, 5, 6}
     1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -51,7 +51,7 @@ webWithHub = [
     1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1,   #Page 10 [Hub]
+    0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1,   #Page 10 [Hub] -> {6, 9, 11, 12, 13, 14}
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
@@ -64,7 +64,7 @@ webWithAuthority = [
     1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,   #Page 6 [Authority]
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,   #Page 6 [Authority] -> {8}
     1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
@@ -72,24 +72,24 @@ webWithAuthority = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 14 [Authority]
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 14 [Authority] -> {}
 ]
 
 webWithHubAndAuthority = [
-    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Authority] -> {2, 6}
     1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,   #Page 6 [Hub]
+    1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,   #Page 6 [Hub] -> {1, 7, 8, 9, 10}
     1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 8 [Authority] -> {}
     0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0,   #Page 14 [Hub] -> {2. 5, 6, 10, 11, 13}
 ]
 
 alpha = 0.85
@@ -128,6 +128,7 @@ def puissance_iteree_v2(A, p, alpha):
     while True:
         ancien_r = r
         r = np.dot(Q, r)
+        # On incrémente le nombre d'itérations à chaque boucle
         iterations += 1
         # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
@@ -136,7 +137,8 @@ def puissance_iteree_v2(A, p, alpha):
 
 r = puissance_iteree_v2(web, 1e-6, alpha)
 
-#Partie 3.2 - 
+#Partie 3.2 - Web avec Hub, Authority et Hub+Authority
+# On applique la fonction puissance_iteree_v2 sur les différents graphes
 rH = puissance_iteree_v2(webWithHub, 1e-6, 0.85)
 rA = puissance_iteree_v2(webWithAuthority, 1e-6, 0.85)
 rHA = puissance_iteree_v2(webWithHubAndAuthority, 1e-6, 0.85)
@@ -157,7 +159,7 @@ for page, rank in page_rank:
 
 print("\n")
 print("===========================")
-print("\nPageRank avec Hub :")
+print("\nPageRank avec un Hub :")
 
 for page, rank in page_rank2:
     print(f"Page {page}\t: {rank:.4f}")   
@@ -165,10 +167,19 @@ for page, rank in page_rank2:
 
 print("\n")
 print("===========================")
-print("\nPageRank avec Authority :")
+print("\nPageRank avec une Authority :")
 
 for page, rank in page_rank3:
     print(f"Page {page}\t: {rank:.4f}")
+
+
+print("\n")
+print("===========================")
+print("\nPageRank avec un Hub et une Authority :")
+
+for page, rank in page_rank4:
+    print(f"Page {page}\t: {rank:.4f}")
+
 
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
