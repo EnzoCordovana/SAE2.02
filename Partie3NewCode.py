@@ -89,7 +89,26 @@ webWithHubAndAuthority = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0,   #Page 14 [Hub] -> {2. 5, 6, 10, 11, 13}
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0,   #Page 14 [Hub] -> {10, 11, 13}
+]
+
+# Partie 3.3 - Augementation du score des pages X
+# Matrice de boost pour les pages X en ajoutant des liens entrants vers une page ciblée
+webPageXScoreBoost = [
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 2 -> Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 3 -> Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 4 -> Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 5 -> Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 6 -> Page 1, 10
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 7 -> Page 1
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 8 -
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 9 -> Page 10
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 10
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 11 -> Page 10
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 12 -> Page 10
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 13 -> Page 10
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 14 -> Page 10
 ]
 
 alpha = 0.85
@@ -149,10 +168,15 @@ page_rank2 = list(enumerate(rH, start=1))
 page_rank3 = list(enumerate(rA, start=1))
 page_rank4 = list(enumerate(rHA, start=1))
 
-
+rB = puissance_iteree_v2(webPageXScoreBoost, 1e-6, 0.85)
+page_rank5 = list(enumerate(rB, start=1))
 
 print("PageRank :")
+# Liste des précisions pour les tests
 precisions = [1e-2, 1e-4, 1e-5, 1e-6, 1e-8, 1e-10]
+
+# Liste des alphas pour les tests
+alphas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 for page, rank in page_rank:
     print(f"Page {page}\t: {rank:.4f}")
@@ -180,7 +204,20 @@ print("\nPageRank avec un Hub et une Authority :")
 for page, rank in page_rank4:
     print(f"Page {page}\t: {rank:.4f}")
 
+print("\n")
+print("===========================")
+print("\nPageRank avec 2 pages boosté :")
+
+for page, rank in page_rank5:
+    print(f"Page {page}\t: {rank:.4f}")
 
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
     r = puissance_iteree_v2(web, p, 0.85)
+
+# On effectue les tests avec différents alphas
+for a in alphas:
+    print(f"\nCalcul avec alpha {a}:")
+    r = puissance_iteree_v2(web, 1e-6, a)
+
+
