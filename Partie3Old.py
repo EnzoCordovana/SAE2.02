@@ -159,4 +159,4 @@ for page, rank in page_rank:
 
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
-    rH = puissance_iteree_v2(web, p, 0.85)
+    r = puissance_iteree_v2(web, p, 0.85)

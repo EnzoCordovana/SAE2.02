@@ -24,47 +24,13 @@ def matrice_stochastique(A):
     Q = A / som_col
     return Q
 
-webWithHub = [
-    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Hub]
+web = [
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1,   #Page 10 [Hub]
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-]
-
-webWithAuthority = [
-    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,   #Page 6 [Authority]
-    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 14 [Authority]
-]
-
-webWithHubAndAuthority = [
-    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,   #Page 6 [Hub]
     1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
@@ -105,35 +71,29 @@ def puissance_iteree_v2(A, p, alpha):
     matrice_transition_P(Q, alpha)
 
     d = Q.shape[0]
-    rH = np.ones(d) / d # Normalisation
+    r = np.ones(d) / d # Normalisation
     iterations = 0
 
     while True:
-        ancien_r = rH
-        rH = np.dot(A, rH)
+        ancien_r = r
+        r = np.dot(Q, r)
         iterations += 1
         # On compare deux matrices selon la précision p
-        if np.allclose(rH, ancien_r, atol=p):
+        if np.allclose(r, ancien_r, atol=p):
             print(f"Convergence atteinte en {iterations} itérations avec p = {p}")
             return ancien_r
 
-
-
-
-#Partie 3.2 - 
-rH = puissance_iteree_v2(webWithHub, 1e-6, 0.85)
-rA = puissance_iteree_v2(webWithAuthority, 1e-6, 0.85)
-rHA = puissance_iteree_v2(webWithHubAndAuthority, 1e-6, 0.85)
+r = puissance_iteree_v2(web, 1e-6, alpha)
 
 # On crée une liste de tuples (index_page, score)
-page_rank = list(enumerate(rH, start=1))
+page_rank = list(enumerate(r, start=1))
 
 print("PageRank :")
-precisions = [1e-2, 1e-4, 1e-6, 1e-8, 1e-10]
+precisions = [1e-2, 1e-4, 1e-5, 1e-6, 1e-8, 1e-10]
 
 for page, rank in page_rank:
     print(f"Page {page}\t: {rank:.4f}")
 
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
-    rH = puissance_iteree_v2(webWithHub, p, 0.85)
+    r = puissance_iteree_v2(web, p, 0.85)
