@@ -1,0 +1,12 @@
+;extern;github.com;github.com/login;github.com/features/copilot;github.com/features/models;github.com/security/advanced-security;github.com/features/actions;github.com/features/codespaces;github.com/features/issues;github.com/features/code-review;github.com/features/discussions
+extern;0;1;1;1;1;1;1;1;1;1;1
+github.com;0;1;0;1;1;1;1;1;1;1;1
+github.com/login;0;1;0;0;0;0;0;0;0;0;0
+github.com/features/copilot;0;1;0;1;1;1;1;1;1;1;1
+github.com/features/models;0;1;0;1;1;1;1;1;1;1;1
+github.com/security/advanced-security;0;1;0;1;1;1;1;1;1;1;1
+github.com/features/actions;0;1;0;1;1;1;1;1;1;1;1
+github.com/features/codespaces;0;1;0;1;1;1;1;1;1;1;1
+github.com/features/issues;0;1;0;1;1;1;1;1;1;1;1
+github.com/features/code-review;0;1;0;1;1;1;1;1;1;1;1
+github.com/features/discussions;0;1;0;1;1;1;1;1;1;1;1
