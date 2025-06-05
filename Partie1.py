@@ -168,3 +168,15 @@ if np.allclose(verification, r, atol=precision):
     print("r = Qr")
 else:
     print("r != Qr")
+
+
+# On crée une liste de tuples (index_page, score)
+page_rank = list(enumerate(r, start=1))
+page_rank.sort(key=lambda tup: tup[1], reverse=True)
+
+listeLiensEntrants = [5,1,2,2,3,3,1,3,1,5,1,2,2,3]
+listeLiensSortants = [5,3,2,2,1,3,2,1,2,5,3,2,2,1]
+
+print("PageRank :\t\tEntrants\tSortants")
+for page, rank in page_rank:
+    print(f"Page {page}\t: {rank:.4f}\t" + str(listeLiensEntrants[page-1]) + "\t\t" + str(listeLiensSortants[page-1]))
