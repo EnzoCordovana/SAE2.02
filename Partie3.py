@@ -42,6 +42,7 @@ web = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
+#3.2A - Ajout de Hub seulement
 webWithHub = [
     0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Hub] -> {2, 3, 4, 5, 6}
     1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -59,6 +60,7 @@ webWithHub = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
+#3.2B - Ajout d'Authoritié seulement
 webWithAuthority = [
     0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -76,7 +78,7 @@ webWithAuthority = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 14 [Authority] -> {}
 ]
 
-
+#3.2C - Ajout des Hubs et des Authorités
 webWithHubAndAuthority = [
     0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,   # Page 1 [Authority] -> {2, 6}
     1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0,
@@ -200,7 +202,7 @@ page_rank5 = list(enumerate(rB, start=1))
 
 
 # Liste des précisions pour les tests
-precisions = [1e-2, 1e-4, 1e-5, 1e-6, 1e-8, 1e-10]
+precisions = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9]
 
 # Liste des alphas pour les tests
 alphas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
@@ -257,6 +259,9 @@ for page, rank in page_rank5:
     print(f"Page {page}\t: {rank:.4f}")
 
 
+
+
+
 # On effectue les tests avec différentes précisions
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
@@ -292,6 +297,27 @@ plt.ylabel("Rank [0-1]")
 plt.legend()
 plt.show()
 
+iterListe = []
+for i in precisions:
+    iterListe.append(i)
+
+
+plt.bar(precisions, iterListe, align='edge',width= 1, label="Nombre d'itérations par échelle de précision")
+plt.title("Nombre d'itérations pour chaque précision")
+plt.xlabel("Précision")
+plt.ylabel("Nombre d'itérations")
+plt.legend()
+plt.show()
+
 """
-(1)
+(1)Pour analyser le critère d'arrêt, on peut observer le nombre d'itérations nécessaires pour atteindre la convergence par rapport à la précision donnée. On doit d'abord ajouter un compteur d'itérations dans la fonction `puissance_iteree_v2` et afficher ce compteur à la fin de chaque exécution et analyser l'impact de la précision sur le résultat, on peut exécuter la fonction `puissance_iteree_v2` avec différentes valeurs de précision et observer comment les scores des pages changent. On observe que plus la précision est élevée, plus le nombre d'itérations augmente, ce qui peut ralentir le calcul. Cependant, les scores finaux convergent vers des valeurs stables, indiquant que la précision est atteinte.
+
+(2)L'impact des scores des pages en ajoutant des Hubs et des Autoritès est significatif. Les Hubs et les Autorités influencent la manière dont les scores sont distribués entre les pages. Les Hubs, qui sont des pages avec de nombreux liens sortants, peuvent augmenter le score des pages qu'ils pointent, tandis que les Autorités, qui sont des pages avec de nombreux liens entrants, peuvent également recevoir un score plus élevé. En comparant les scores avec et sans Hubs et Autorités, on peut voir que certaines pages gagnent en importance dans le réseau, ce qui reflète leur rôle dans la structure du web.
+
+(3)Afin d'augmenter le score des pages X, on peut ajouter des liens entrants vers ces pages dans la matrice d'adjacence. Cela peut être réalisé en modifiant la matrice d'adjacence pour inclure des liens supplémentaires vers les pages ciblées. Par exemple, si l'on souhaite augmenter le score de la page 1, on peut ajouter des liens entrants depuis les pages 2 à 5 vers la page 1. Cela augmentera le score de la page 1 dans le calcul du PageRank, car elle recevra plus de "votes" de la part des autres pages.
+
+
+
+
+
 """
