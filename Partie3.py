@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import time
 
 def matrice_transposee(A):
     A = np.array(A)
@@ -148,15 +149,17 @@ def puissance_iteree_v2(A, p, alpha):
     d = Q.shape[0]
     r = np.ones(d) / d # Normalisation
     iterations = 0
+    start_time = time.time()
 
     while True:
         ancien_r = r
         r = np.dot(Q, r)
         # On incrémente le nombre d'itérations à chaque boucle
         iterations += 1
+        elapsed_time = time.time() - start_time
         # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
-            print(f"Convergence atteinte en {iterations} itérations avec p = {p}")
+            print(f"Convergence atteinte en {iterations} itérations avec p = {p} et alpha = {alpha}. Temps écoulé : {elapsed_time:.4f} secondes.")
             return ancien_r
 
 
@@ -171,87 +174,94 @@ rB = puissance_iteree_v2(webPageXScoreBoost, 1e-6, 0.85)
 
 # On crée une liste de tuples (index_page, score)
 page_rank = list(enumerate(r, start=1))
-page_rank2 = list(enumerate(rH, start=1))
-page_rank3 = list(enumerate(rA, start=1))
-page_rank4 = list(enumerate(rHA, start=1))
-page_rank5 = list(enumerate(rB, start=1))
+page_rank_Hub = list(enumerate(rH, start=1))
+page_rank_Auth = list(enumerate(rA, start=1))
+page_rank_HuAu = list(enumerate(rHA, start=1))
+page_rank_BoostedPage = list(enumerate(rB, start=1))
 
-
-# Liste des précisions pour les tests
-precisions = [1e-1, 1e-3, 1e-6, 1e-9]
-
-# Liste des alphas pour les tests
-alphas = [0.1, 0.9, 0.85, 0.99]
 
 print("PageRank :")
 for page, rank in page_rank:
     print(f"Page {page}\t: {rank:.4f}")
 
+# On extrait le premier rangs pour le graphique
 rank1 = []
 for i in page_rank:
     rank1.append(i[1])
 
-print("\n")
-print("===========================")
+
+print(f"\n" + "=" * 60)
 print("\nPageRank avec un Hub :")
 
-for page, rank in page_rank2:
+for page, rank in page_rank_Hub:
     print(f"Page {page}\t: {rank:.4f}")   
 
 
-print("\n")
-print("===========================")
+
+print(f"\n" + "=" * 60)
 print("\nPageRank avec une Authority :")
 
-for page, rank in page_rank3:
+for page, rank in page_rank_Auth:
     print(f"Page {page}\t: {rank:.4f}")
 
 
-print("\n")
-print("===========================")
+
+print(f"\n" + "=" * 60)
 print("\nPageRank avec un Hub et une Authority (Version1) :")
 
-for page, rank in page_rank4:
+for page, rank in page_rank_HuAu:
     print(f"Page {page}\t: {rank:.4f}")
 
+# On extrait le second rangs pour le graphique
 rank2 = []
-for i in page_rank4:
+for i in page_rank_HuAu:
     rank2.append(i[1])
 
 print(rank2)
 
-print("\n")
-print("===========================")
+
+print(f"\n" + "=" * 60)
 print("\nPageRank avec 2 pages boosté :")
 
-for page, rank in page_rank5:
+# On affiche le PageRank avec les pages boostées
+for page, rank in page_rank_BoostedPage:
     print(f"Page {page}\t: {rank:.4f}")
+
 
 
 
 
 
 # On effectue les tests avec différentes précisions
-
-print("\n")
-print("===========================")
+print(f"\n" + "=" * 60)
 print("\nNombre d'itérations par présicion :")
+
+# Liste des précisions pour les tests
+precisions = [1e-1, 1e-3, 1e-6, 1e-9]
 
 for p in precisions:
     print(f"\nCalcul avec précision {p}:")
-    print(puissance_iteree_v2(web, p, 0.85))
+    rP = puissance_iteree_v2(web, p, 0.85)
+    page_rank_Precs = list(enumerate(rP, start=1))
+    for page, rank in page_rank_Precs:
+        print(f"Page {page}\t: {rank:.4f}")
    
 
-# On effectue les tests avec différents alphas
 
-print("\n")
-print("===========================")
+
+# On effectue les tests avec différents alphas
+print(f"\n" + "=" * 60)
 print("\nNombre d'itérations par alpha :")
+
+# Liste des alphas pour les tests
+alphas = [0.1, 0.9, 0.85, 0.99]
 
 for a in alphas:
     print(f"\nCalcul avec alpha {a}:")
-    r = puissance_iteree_v2(web, 1e-6, a)
-
+    rAlpha = puissance_iteree_v2(web, 1e-6, a)
+    page_rank_Alphas = list(enumerate(rAlpha, start=1))
+    for page, rank in page_rank_Alphas:
+        print(f"Page {page}\t: {rank:.4f}")
 
 
 def creerListePages(n):
@@ -283,7 +293,7 @@ plt.show()
 
 (3)Afin d'augmenter le score des pages X, on peut ajouter des liens entrants vers ces pages dans la matrice d'adjacence. Cela peut être réalisé en modifiant la matrice d'adjacence pour inclure des liens supplémentaires vers les pages ciblées. Par exemple, si l'on souhaite augmenter le score de la page 1, on peut ajouter des liens entrants depuis les pages 2 à 5 vers la page 1. Cela augmentera le score de la page 1 dans le calcul du PageRank, car elle recevra plus de "votes" de la part des autres pages.
 
-
+(4)On observe qu'apres la varition de l'alpha, les scores des pages changent en fonction de la valeur de alpha. Un alpha plus élevé (proche de 1) donne plus de poids aux liens existants, tandis qu'un alpha plus bas (proche de 0) favorise l'exploration aléatoire des pages. Cela peut influencer la manière dont les scores sont distribués entre les pages, en favorisant certaines pages qui ont des liens sortants importants ou en redistribuant le score de manière plus uniforme.
 
 
 
