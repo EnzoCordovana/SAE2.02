@@ -4,7 +4,7 @@ import math
 def matrice_transposee(A):
     """
     Fonction matrice_transposee qui prend en entrée 
-    une matrice A et qui renvoie sa transposé.
+    une matrice A et qui renvoie sa transposée.
 
     Arguments:
     A   matrice, doit être un tableau
@@ -19,23 +19,25 @@ def matrice_transposee(A):
     # Retourne directement la transposée
     return A.T
 
-def matrice_stochastique(A):
+def matrice_stochastique(C):
     """
     Fonction nomatrice_stochastiquerme qui prend en entrée 
-    une matrice A et qui renvoie sa stochastique.
+    une matrice C et qui renvoie sa stochastique.
 
     Arguments:
-    A   matrice, doit être un tableau
+    C   matrice, doit être un tableau
     """
     # Transforme la matrice en matrice numpy en float
-    A = np.array(A, dtype=float)
+    C = np.array(C, dtype=float)
+
     # Somme par colonne
-    som_col = A.sum(axis=0)
+    som_col = C.sum(axis=0)
     # Remplace 0 par 1 pour éviter division par zéro
     som_col[som_col == 0] = 1
+
     # Normalise chaque colonne
     # La somme de la colonne fait 1
-    Q = A / som_col
+    Q = C / som_col
     return Q
 
 def norme(X):
@@ -44,7 +46,7 @@ def norme(X):
     un vecteur X et qui calcule sa norme.
 
     Arguments:
-    X   vecteur, doit être un tableau
+    X   vecteur, doit être un tableau.
     """
     sum = 0
     # On ajoute le carré à la variable
@@ -54,19 +56,20 @@ def norme(X):
     return np.sqrt(sum)
 
 
-def puissance_iteree(A, p):
+# Fonction vue en TP
+def puissance_iteree(C, p):
     """
     Fonction puissance_iteree qui prend en entrée 
     une matrice A, une précision p et qui retourne 
     la valeur propre ainsi que le vecteur propre.
     
-    A       matrice, doit être un tableau
-    p       précision, doit être un entier   
+    A       matrice, doit être un tableau.
+    p       précision, doit être un entier.
     """
-    A = np.array(A)
+    C = np.array(A)
 
     # Dimension de la matrice carré
-    d = int(math.sqrt(len(A)))
+    d = int(math.sqrt(len(C)))
 
     # Vecteur X_O \in R^N
     vec_0 = np.array([])
@@ -75,7 +78,7 @@ def puissance_iteree(A, p):
 
     # Redimensionner la matrice en une matrice carrée
     # [a,b,c,d] => [[a,b],[c,d]]
-    A = A.reshape((d, d))
+    C = C.reshape((d, d))
 
     lambda0 = 0
     lambda1 = 0
@@ -118,36 +121,50 @@ web = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
-def puissance_iteree_v2(A, p):
+# Fonction pour la SAE
+def puissance_iteree_v2(C, p):
     """
     Fonction puissance_iteree qui prend en entrée 
     une matrice A, une précision p et qui retourne 
     un tableau de vecteur propre.
     
-    A       matrice, doit être un tableau
+    Arguments:
+    C       matrice, doit être un tableau
     p       précision, doit être un entier   
     """
 
-    A = np.array(A)
+    C = np.array(C)
 
-    # Transpose et stochastique la matrice
-    Q = matrice_stochastique(matrice_transposee(A))
+    # Transposé de la matrice
+    C = matrice_transposee(C)
 
-    d = Q.shape[0]
-    r = np.ones(d) / d
+    # Calcule de la matrice Q
+    Q = matrice_stochastique(C)
+
+    # Nombre de page
+    N = Q.shape[0]
+
+    # Vecteur initial
+    r = np.ones(N) / N
 
     while True:
-        ancien_r = r
+        ancien_r = r.copy()
         r = np.dot(Q, r)
-        # On compare deux matrice selon la précision p
+        # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
-            return ancien_r
+            return ancien_r, Q
 
-r = puissance_iteree_v2(web, 1e-6)
+precision = 1e-6
 
-# On crée une liste de tuples (index_page, score)
-page_rank = list(enumerate(r, start=1))
+# Calcul des scores des pages de la matrice web
+r, Q = puissance_iteree_v2(web, precision)
+for page in range(len(r)):
+    print(f"Page {page+1:<3}: {r[page]:.4f}")
 
-print("PageRank :")
-for page, rank in page_rank:
-    print(f"Page {page}\t: {rank:.4f}")
+# Vérification que r = Q*r
+verification = np.dot(Q, r)
+print("On vérifie que r = Qr")
+if np.allclose(verification, r, atol=precision):
+    print("r = Qr")
+else:
+    print("r != Qr")
