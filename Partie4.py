@@ -92,6 +92,23 @@ matrice3 = [
     0,0,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ]
 
+matrices = [
+    [
+        "Next js: ",
+        matrice1
+    ],
+    [
+        "Astro :",
+        matrice2
+    ],
+    [
+        "Svelte: ", 
+        matrice3
+    ]
+]
+
+alpha = 0.85
+
 def matrice_transposee(A):
     A = np.array(A)
     if A.ndim == 1:
@@ -114,8 +131,6 @@ def matrice_stochastique(A):
     # La somme de la colonne fait 1
     Q = A / som_col
     return Q
-
-alpha = 0.85
 
 def matrice_transition_P(A, alpha):
     for i in range(len(A)):
@@ -142,7 +157,7 @@ def puissance_iteree_v2(A, p, alpha):
     Q = matrice_stochastique(matrice_transposee(A))
 
     # Traitement par colonne
-    matrice_transition_P(Q, alpha)
+    Q = matrice_transition_P(Q, alpha)
 
     d = Q.shape[0]
     r = np.ones(d) / d # Normalisation
@@ -170,8 +185,29 @@ for matrice_info in matrices:
 """
 
 # Matrice de la ville
-M = np.load("Data/Nice/Nice_France_Matrice.npy")
+M_nice = np.load("Data/Nice/Nice_France_Matrice.npy")
 # Liste des identifiants des noeuds
-N = np.load("Data/Nice/Nice_France_Id_Noeud.npy")
+N_nice = np.load("Data/Nice/Nice_France_Id_Noeud.npy")
 
-# print('M: ', M,'N: ', N)
+villes = [
+    [
+        "Nice: ",
+        M_nice.T,
+        N_nice,
+    ]
+]
+
+
+def classement(noeud:np.array,score:np.array):
+    corres = {}
+    for i in range(len(noeud)):
+        corres[noeud[i]] = score[i]
+    sorted_corres = dict(sorted(corres.items(), key=lambda item: item[1],reverse=True))
+    return list(sorted_corres.keys())
+Gaston_Berger = M_nice.T
+id_Gaston_Berger = N_nice
+score = puissance_iteree_v2(Gaston_Berger,1e-6, alpha)
+t = classement(id_Gaston_Berger,score)
+
+for i in range(10):
+    print(f"{i+1} : {t[i]} : https://www.openstreetmap.org/node/%7Bt[i]%7D")
