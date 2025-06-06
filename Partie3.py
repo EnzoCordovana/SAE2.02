@@ -108,13 +108,13 @@ webPageXScoreBoost = [
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 5 -> Page 1
     1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 6 -> Page 1, 10
     1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 7 -> Page 1
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 8 -
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 9 -> Page 10
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 10
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 11 -> Page 10
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 12 -> Page 10
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 13 -> Page 10
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 14 -> Page 10
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 8 -> Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 9 -> Page 10, 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   #Page 10 > Page 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 11 -> Page 10, 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 12 -> Page 10, 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 13 -> Page 10, 1
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,   #Page 14 -> Page 10, 1
 ]
 
 alpha = 0.85
@@ -185,18 +185,20 @@ for page, rank in page_rank:
     print(f"Page {page}\t: {rank:.4f}")
 
 # On extrait le premier rangs pour le graphique
-rank1 = []
+rankWebNormal = []
 for i in page_rank:
-    rank1.append(i[1])
+    rankWebNormal.append(i[1])
 
 
-print(f"\n" + "=" * 60)
+print(f"\n" + "=" * 60) #Séparateur
 print("\nPageRank avec un Hub :")
 
 for page, rank in page_rank_Hub:
     print(f"Page {page}\t: {rank:.4f}")   
 
-
+rankHub = []
+for i in page_rank_Hub:
+    rankHub.append(i[1])
 
 print(f"\n" + "=" * 60)
 print("\nPageRank avec une Authority :")
@@ -204,7 +206,9 @@ print("\nPageRank avec une Authority :")
 for page, rank in page_rank_Auth:
     print(f"Page {page}\t: {rank:.4f}")
 
-
+rankAuth = []
+for i in page_rank_Auth:
+    rankAuth.append(i[1])
 
 print(f"\n" + "=" * 60)
 print("\nPageRank avec un Hub et une Authority (Version1) :")
@@ -213,11 +217,9 @@ for page, rank in page_rank_HuAu:
     print(f"Page {page}\t: {rank:.4f}")
 
 # On extrait le second rangs pour le graphique
-rank2 = []
+rankWebHuAu = []
 for i in page_rank_HuAu:
-    rank2.append(i[1])
-
-print(rank2)
+    rankWebHuAu.append(i[1])
 
 
 print(f"\n" + "=" * 60)
@@ -264,6 +266,10 @@ for a in alphas:
         print(f"Page {page}\t: {rank:.4f}")
 
 
+
+
+# Graphiques des analyses
+
 def creerListePages(n):
     listePages = []
     for i in range(n):
@@ -274,8 +280,10 @@ qtePages = 14
 
 listePages = creerListePages(qtePages)
 
-matriceSansHubEtAut = rank1
-matriceAvecHubEtAut = rank2
+matriceSansHubEtAut = rankWebNormal
+matriceAvecHubEtAut = rankWebHuAu
+matriceAvecHub = rankHub
+matriceAvecAut = rankAuth
 
 plt.bar(listePages, matriceSansHubEtAut, align='edge',width= 0.5, label="Ranks sans Hubs et Autorités")
 plt.bar(listePages, matriceAvecHubEtAut, color='red', width=0.5, label="Ranks avec Hubs et Autorités")
@@ -284,6 +292,17 @@ plt.title("Impact des scores avec Hubs et Autorités")
 plt.ylabel("Rank [0-1]")
 plt.legend()
 plt.show()
+
+
+plt.bar(listePages, matriceAvecHub, align='edge', color= 'cyan', width=0.5, label="Ranks avec seulement des Hubs")
+plt.bar(listePages, matriceAvecAut, color='green', width=0.5, label="Ranks avec seuelement des Autorités")
+
+plt.title("Différence des scores avec seulemnt Hubs ou Autorités")
+plt.ylabel("Rank [0-1]")
+plt.legend()
+plt.show()
+
+
 
 
 """
