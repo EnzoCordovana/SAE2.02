@@ -24,6 +24,23 @@ def matrice_stochastique(A):
     Q = A / som_col
     return Q
 
+def norme(X):
+    """
+    Fonction norme qui prend en entrée 
+    un vecteur X et qui calcule sa norme.
+
+    Arguments:
+    X   vecteur, doit être un tableau.
+    """
+    sum = 0
+    # On ajoute le carré à la variable
+    for x in np.array(X):
+        sum += x**2
+    # On retourne la racine à la variable
+    return np.sqrt(sum)
+
+
+
 web = [
     0, 0, 0, 0, 0,
     1, 0, 0, 0, 0,
@@ -92,3 +109,15 @@ for i in tabRes:
     else:
         res.append(False)
 print(res)
+
+
+"""
+1. L'algorithme de calcul direct du score r par rapport au système r=Pr où P est la matrice de transition est (I - P)r = 0.Pour résoudre ce système, on peut le réécrire comme :
+
+r = Pr
+r - Pr = 0
+(I - P)r = 0
+
+Cependant, ce système homogène a une solution triviale (r = 0). En réalité, on cherche le vecteur propre principal de P, c'est-à-dire la solution de (I - P)r = 0 avec la contrainte que la somme des composantes de r égale 1.
+
+"""
