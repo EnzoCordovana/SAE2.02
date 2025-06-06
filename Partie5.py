@@ -1,5 +1,7 @@
 import numpy as np
 import math
+import time
+import matplotlib as plt
 
 def matrice_transposee(A):
     A = np.array(A)
@@ -42,11 +44,20 @@ def norme(X):
 
 
 web = [
-    0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0,
-    1, 0, 0, 1, 0,
-    1, 1, 0, 0, 0,
-    1, 1, 0, 0, 0
+    0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 ]
 
 alpha = 0.85
@@ -88,6 +99,81 @@ def puissance_iteree_v2(A, p, alpha):
         if np.allclose(r, ancien_r, atol=p):
             return ancien_r
 
+def preparer_matrice_google(A, alpha):
+    """
+    Fonction preparer_matrice_google qui prend en entrée 
+    une matrice A et un alpha et qui retourne la matrice 
+    de transition P.
+    
+    A       matrice, doit être un tableau
+    alpha   coefficient de damping, doit être un float
+    """
+    A = np.array(A)
+
+    # Si c'est un vecteur aplati, le transformer en matrice carrée
+    if A.ndim == 1:
+        d = int(np.sqrt(len(A)))
+        A = A.reshape((d, d))
+
+    # On transpose la matrice et on la rend stochastique
+    P = matrice_stochastique(matrice_transposee(A))
+
+    #Traitement de la matrice P
+    # On applique le principe de Google PageRank
+    n = P.shape[0]  # Nombre de pages
+    for i in range(n):
+        if np.sum(P[:, i]) == 0:
+            P[:, i] = np.ones(n) / n
+        else:
+            P[:, i] = alpha * P[:, i] + (1 - alpha) / n
+
+    return P
+
+def puissance_direct(A, alpha):
+    """
+    PARTIE 5.1 et 5.2 : Algorithme de calcul direct du PageRank
+    
+    Pseudo-code:
+    1. Construire la matrice Google G = alpha * P + (1-alpha)/n * ones
+    2. Construire la matrice (I - G)
+    3. Remplacer une ligne par la contrainte de normalisation (somme = 1)
+    4. Résoudre le système linéaire (I - G_modifié) × r = b
+    5. Retourner r
+    
+    A: matrice d'adjacence
+    alpha: facteur d'amortissement
+    verbose: affichage des détails
+    
+    Returns: (vecteur PageRank, temps d'exécution)
+    """
+
+    start_time = time.time()
+
+    # Préparation de la matrice Google
+    P = preparer_matrice_google(A, alpha)
+
+    # Création de la matrice identité
+    I = np.eye(P.shape[0])
+
+    # Création de la matrice (I - P)
+    G = I - P
+
+    # Remplacement de la dernière ligne par la contrainte de normalisation
+    G[-1, :] = 1
+
+    # Résolution du système linéaire
+    b = np.zeros(G.shape[0])
+    b[-1] = 1  # Contrainte de normalisation
+
+    r = np.linalg.solve(G, b)
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+
+    return r, execution_time
+
+
+
 r = puissance_iteree_v2(web, 1e-6, alpha)
 
 # On crée une liste de tuples (index_page, score)
@@ -109,6 +195,9 @@ for i in tabRes:
     else:
         res.append(False)
 print(res)
+
+
+
 
 
 """
