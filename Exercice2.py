@@ -12,16 +12,16 @@ def matrice_transposee(A):
     # Retourne directement la transposée
     return A.T
 
-def matrice_stochastique(A):
+def matrice_stochastique(C):
     # Transforme la matrice en matrice numpy en float
-    A = np.array(A, dtype=float)
+    C = np.array(C, dtype=float)
     # Somme par colonne
-    som_col = A.sum(axis=0)
+    som_col = C.sum(axis=0)
     # Remplace 0 par 1 pour éviter division par zéro
     som_col[som_col == 0] = 1
     # Normalise chaque colonne
     # La somme de la colonne fait 1
-    Q = A / som_col
+    Q = C / som_col
     return Q
 
 web = [
@@ -32,9 +32,8 @@ web = [
     1, 1, 0, 0, 0
 ]
 
-alpha = 0.85
-
-def matrice_transition_P(A, alpha):
+# Appliquement du facteur d'armortissement
+def matrice_transition_P(A, alpha=0.85):
     for i in range(len(A)):
         colSom = np.sum(A[:, i]) # Stockage de la somme d'une colonne
         if colSom == 0:
@@ -43,7 +42,7 @@ def matrice_transition_P(A, alpha):
             A[:, i] = alpha * A[:, i] + (1-alpha)/len(A) # Sinon, chaque cellule devienne alpha * cellule + (1-alpha)/N
     return A
 
-def puissance_iteree_v2(A, p, alpha):
+def puissance_iteree_v2(C, p, alpha=0.85):
     """
     Fonction puissance_iteree qui prend en entrée 
     une matrice A, une précision p et qui retourne 
@@ -53,45 +52,43 @@ def puissance_iteree_v2(A, p, alpha):
     p       précision, doit être un entier   
     """
 
-    A = np.array(A)
+    C = np.array(C)
 
-    # Transpose et stochastique la matrice
-    Q = matrice_stochastique(matrice_transposee(A))
+    # Transposé de la matrice
+    C = matrice_transposee(C)
+
+    # Calcule de la matrice Q
+    Q = matrice_stochastique(C)
 
     # Traitement par colonne
     matrice_transition_P(Q, alpha)
 
-    d = Q.shape[0]
-    r = np.ones(d) / d # Normalisation
+    # Nombre de page
+    N = Q.shape[0]
+
+    # Vecteur initial
+    r = np.ones(N) / N # Normalisation
 
     while True:
-        ancien_r = r
+        ancien_r = r.copy()
         r = np.dot(Q, r)
         # On compare deux matrices selon la précision p
         if np.allclose(r, ancien_r, atol=p):
-            return ancien_r
+            return ancien_r, Q
 
-r = puissance_iteree_v2(web, 1e-6, alpha)
+precision = 1e-6
 
-# On crée une liste de tuples (index_page, score)
-page_rank = list(enumerate(r, start=1))
+r, Q = puissance_iteree_v2(web, precision)
+for page in range(len(r)):
+    print(f"Page {page+1:<3}: {r[page]:.4f}")
 
-print("PageRank :")
-for page, rank in page_rank:
-    print(f"Page {page}\t: {rank:.4f}")
-print("\r")
-print("r = Pr approximativement ?")
-A = np.array(web)
-Q = matrice_stochastique(matrice_transposee(A))
-Pr = r.dot(matrice_transition_P(Q, alpha))
-res= []
-tabRes = abs(np.subtract(Pr, r))
-for i in tabRes:
-    if i < 0.85:
-        res.append(True)
-    else:
-        res.append(False)
-print(res)
+# Vérification que r = Q*r
+verification = np.dot(Q, r)
+print("On vérifie que r = Qr")
+if np.allclose(verification, r, atol=precision):
+    print("r = Qr")
+else:
+    print("r != Qr")
 
 """
 1) Si on applique l'algorithme de la partie 1 au graphe de cette partie,
