@@ -194,7 +194,7 @@ print(f"\n" + "=" * 60) #Séparateur
 print("\nPageRank avec un Hub :")
 
 for page, rank in page_rank_Hub:
-    print(f"Page {page}\t: {rank:.4f}")   
+    print(f"Page {page}\t: {rank:.4f}")
 
 rankHub = []
 for i in page_rank_Hub:
@@ -234,6 +234,12 @@ for page, rank in page_rank_BoostedPage:
 
 
 
+"""
+1.  Analyser l’influence du critère d'arrêt dans l’algorithme de la puissance itérée.
+"""
+
+### Précision
+
 # On effectue les tests avec différentes précisions
 print(f"\n" + "=" * 60)
 print("\nNombre d'itérations par présicion :")
@@ -246,10 +252,10 @@ for p in precisions:
     rP = puissance_iteree_v2(web, p, 0.85)
     page_rank_Precs = list(enumerate(rP, start=1))
     for page, rank in page_rank_Precs:
-        print(f"Page {page}\t: {rank:.4f}")
+        print(f"Page {page}\t: {rank:.8f}")
    
 
-
+### Alpha
 
 # On effectue les tests avec différents alphas
 print(f"\n" + "=" * 60)
@@ -263,9 +269,15 @@ for a in alphas:
     rAlpha = puissance_iteree_v2(web, 1e-6, a)
     page_rank_Alphas = list(enumerate(rAlpha, start=1))
     for page, rank in page_rank_Alphas:
-        print(f"Page {page}\t: {rank:.4f}")
+        print(f"Page {page}\t: {rank:.8f}")
 
 
+
+
+lzd32 = puissance_iteree_v2(web, 1e-9999999999999, 1)
+aaa = list(enumerate(lzd32, start=1))
+for page, rank in aaa:
+    print(f"Page {page}\t: {rank:.8f}")
 
 
 # Graphiques des analyses
@@ -300,7 +312,7 @@ plt.bar(listePages, matriceAvecAut, color='green', width=0.5, label="Ranks avec 
 plt.title("Différence des scores avec seulemnt Hubs ou Autorités")
 plt.ylabel("Rank [0-1]")
 plt.legend()
-plt.show()
+#plt.show()
 
 
 
