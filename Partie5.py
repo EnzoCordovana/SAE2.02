@@ -73,6 +73,7 @@ web = [
 alpha = 0.85
 
 def puissance_iteree_v2(A, p, alpha):
+
     """
     Fonction puissance_iteree qui prend en entrée 
     une matrice A, une précision p et qui retourne 
