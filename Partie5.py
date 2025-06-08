@@ -72,6 +72,7 @@ def matrice_transition_P(A, alpha):
     return A
 
 def puissance_iteree_v2(A, p, alpha):
+
     """
     Fonction puissance_iteree qui prend en entrée 
     une matrice A, une précision p et qui retourne 
@@ -130,6 +131,9 @@ def puissance_iteree_v2(A, p, alpha):
 
     return P
 
+#def preapration_algo_google(A, alpha):
+
+
 r = puissance_iteree_v2(web, 1e-6, alpha)
 
 # On crée une liste de tuples (index_page, score)
@@ -165,4 +169,7 @@ r - Pr = 0
 
 Cependant, ce système homogène a une solution triviale (r = 0). En réalité, on cherche le vecteur propre principal de P, c'est-à-dire la solution de (I - P)r = 0 avec la contrainte que la somme des composantes de r égale 1.
 
+"""
+"""
+Pseudo-code :
 """
