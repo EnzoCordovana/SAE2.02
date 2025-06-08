@@ -99,7 +99,8 @@ def puissance_iteree_v2(A, p, alpha):
         if np.allclose(r, ancien_r, atol=p):
             return ancien_r
 
-def preparer_matrice_google(A, alpha):
+
+
     """
     Fonction preparer_matrice_google qui prend en entrée 
     une matrice A et un alpha et qui retourne la matrice 
@@ -128,51 +129,6 @@ def preparer_matrice_google(A, alpha):
             P[:, i] = alpha * P[:, i] + (1 - alpha) / n
 
     return P
-
-def puissance_direct(A, alpha):
-    """
-    PARTIE 5.1 et 5.2 : Algorithme de calcul direct du PageRank
-    
-    Pseudo-code:
-    1. Construire la matrice Google G = alpha * P + (1-alpha)/n * ones
-    2. Construire la matrice (I - G)
-    3. Remplacer une ligne par la contrainte de normalisation (somme = 1)
-    4. Résoudre le système linéaire (I - G_modifié) × r = b
-    5. Retourner r
-    
-    A: matrice d'adjacence
-    alpha: facteur d'amortissement
-    verbose: affichage des détails
-    
-    Returns: (vecteur PageRank, temps d'exécution)
-    """
-
-    start_time = time.time()
-
-    # Préparation de la matrice Google
-    P = preparer_matrice_google(A, alpha)
-
-    # Création de la matrice identité
-    I = np.eye(P.shape[0])
-
-    # Création de la matrice (I - P)
-    G = I - P
-
-    # Remplacement de la dernière ligne par la contrainte de normalisation
-    G[-1, :] = 1
-
-    # Résolution du système linéaire
-    b = np.zeros(G.shape[0])
-    b[-1] = 1  # Contrainte de normalisation
-
-    r = np.linalg.solve(G, b)
-
-    end_time = time.time()
-    execution_time = end_time - start_time
-
-    return r, execution_time
-
-
 
 r = puissance_iteree_v2(web, 1e-6, alpha)
 
